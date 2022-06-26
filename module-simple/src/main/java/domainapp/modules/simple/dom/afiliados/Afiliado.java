@@ -41,7 +41,7 @@ import domainapp.modules.simple.types.Edad;
 import domainapp.modules.simple.types.LugarNacimiento;
 import domainapp.modules.simple.types.Telefono;
 import domainapp.modules.simple.types.FechaInicio;
-import domainapp.modules.simple.types.Plan;
+import domainapp.modules.simple.types.Planes;
 
 @javax.jdo.annotations.PersistenceCapable(
         schema = "afiliadoapp",
@@ -81,7 +81,7 @@ public class Afiliado implements Comparable<Afiliado> {
 
     public static Afiliado withName(String name, String apellido, String dni, String edad,
                                     String fechaNacimiento, String lugarNacimiento, String telefono,
-                                    String fechaInicio, String plan) {
+                                    String fechaInicio, String planes) {
         val afiliado = new Afiliado();
         afiliado.setName(name);
         afiliado.setApellido(apellido);
@@ -91,50 +91,104 @@ public class Afiliado implements Comparable<Afiliado> {
         afiliado.setLugarNacimiento(lugarNacimiento);
         afiliado.setTelefono(telefono);
         afiliado.setFechaInicio(fechaInicio);
-        afiliado.setPlan(plan);
+        afiliado.setPlanes(planes);
         return afiliado;
     }
-
-    @Inject RepositoryService repositoryService;
-    @Inject TitleService titleService;
-    @Inject MessageService messageService;
-
 
 
     @Title
     @Name
     @Getter @Setter @ToString.Include
-    @PropertyLayout(fieldSetId = "name", sequence = "1")
+    @PropertyLayout(fieldSetId = "afiliados", sequence = "1")
     private String name;
+
+    @Apellido
+    @Getter @Setter @ToString.Include
+    @PropertyLayout(fieldSetId = "afiliados", sequence = "2")
+    private String apellido;
+
+    @Dni
+    @Getter @Setter @ToString.Include
+    @PropertyLayout(fieldSetId = "afiliados", sequence = "3")
+    private String dni;
+
+    @Edad
+    @Getter @Setter @ToString.Include
+    @PropertyLayout(fieldSetId = "name", sequence = "4")
+    private String edad;
+
+    @FechaNacimiento
+    @Getter @Setter @ToString.Include
+    @PropertyLayout(fieldSetId = "name", sequence = "5  ")
+    private String fechaNacimiento;
+
+
+
+    @LugarNacimiento
+    @Getter @Setter @ToString.Include
+    @PropertyLayout(fieldSetId = "name", sequence = "6")
+    private String lugarNacimiento;
+
+    @Telefono
+    @Getter @Setter @ToString.Include
+    @PropertyLayout(fieldSetId = "name", sequence = "7")
+    private String telefono;
+
+    @FechaInicio
+    @Getter @Setter @ToString.Include
+    @PropertyLayout(fieldSetId = "name", sequence = "8")
+    private String fechaInicio;
+
+
+    @Planes
+    @Getter @Setter @ToString.Include
+    @PropertyLayout(fieldSetId = "name", sequence = "9")
+    private String planes;
+
+
 
     @Notes
     @Getter @Setter
     @Property(commandPublishing = Publishing.ENABLED, executionPublishing = Publishing.ENABLED)
-    @PropertyLayout(fieldSetId = "name", sequence = "2")
+    @PropertyLayout(fieldSetId = "afiliados", sequence = "10")
     private String notes;
 
 
+
     @Action(semantics = IDEMPOTENT, commandPublishing = Publishing.ENABLED, executionPublishing = Publishing.ENABLED)
-    @ActionLayout(associateWith = "name", promptStyle = PromptStyle.INLINE)
-    public SimpleObject updateName(
+    @ActionLayout(associateWith = "afiliados", promptStyle = PromptStyle.INLINE)
+    public Afiliado updateName(
             @Name final String name) {
         setName(name);
         return this;
     }
-    public String default0UpdateName() {
+
+    @Action(semantics = NON_IDEMPOTENT_ARE_YOU_SURE)
+    @ActionLayout(
+            position = ActionLayout.Position.PANEL,
+            describedAs = "Borra afiliado.")
+    public String borrar() {
+        String nombre = this.getDni();
+        final String title = titleService.titleOf(this);
+        messageService.informUser(String.format("'%s' borrado", title));
+        repositoryService.removeAndFlush(this);
+        return "Se borro el afiliado " + nombre;
+    }
+
+  /*  public String default0UpdateName() {
         return getName();
     }
     public String validate0UpdateName(String newName) {
         for (char prohibitedCharacter : "&%$!".toCharArray()) {
             if( newName.contains(""+prohibitedCharacter)) {
-                return "Caracter '" + prohibitedCharacter + "' no esta permitido.";
+                return "Character '" + prohibitedCharacter + "' is not allowed.";
             }
         }
         return null;
-    }
+    }*/
 
 
-    @Action(semantics = NON_IDEMPOTENT_ARE_YOU_SURE)
+    /*@Action(semantics = NON_IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout(
             position = ActionLayout.Position.PANEL,
             describedAs = "Deletes this object from the persistent datastore")
@@ -142,15 +196,15 @@ public class Afiliado implements Comparable<Afiliado> {
         final String title = titleService.titleOf(this);
         messageService.informUser(String.format("'%s' deleted", title));
         repositoryService.removeAndFlush(this);
-    }
+    }*/
 
 
 
-    private final static Comparator<SimpleObject> comparator =
-            Comparator.comparing(SimpleObject::getName);
+    private final static Comparator<Afiliado> comparator =
+            Comparator.comparing(Afiliado::getName);
 
     @Override
-    public int compareTo(final SimpleObject other) {
+    public int compareTo(final Afiliado other) {
         return comparator.compare(this, other);
     }
 

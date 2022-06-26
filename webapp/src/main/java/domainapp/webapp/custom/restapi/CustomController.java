@@ -17,21 +17,20 @@ import org.apache.isis.applib.services.xactn.TransactionalProcessor;
 
 import lombok.RequiredArgsConstructor;
 
-import domainapp.modules.simple.dom.afiliados.SimpleObject;
-import domainapp.modules.simple.dom.afiliados.SimpleObjects;
-
+import domainapp.modules.simple.dom.afiliados.Afiliado;
+import domainapp.modules.simple.dom.afiliados.Afiliados;
 @RestController
 @RequiredArgsConstructor(onConstructor_ = {@Inject})
 class CustomController {
 
     private final InteractionService interactionService;
     private final TransactionalProcessor transactionalProcessor;
-    private final SimpleObjects simpleObjects;
+    private final Afiliados afiliados;
 
     @GetMapping("/custom/simpleObjects")
-    List<SimpleObject> all() {
-        return call("sven", simpleObjects::listAll)
-                .orElse(Collections.<SimpleObject>emptyList());
+    List<Afiliado> all() {
+        return call("sven", afiliados::listAll)
+                .orElse(Collections.<Afiliado>emptyList());
     }
 
     private <T> Optional<T> call(

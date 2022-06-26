@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.apache.isis.testing.fixtures.applib.fixturescripts.FixtureScript;
 import org.apache.isis.testing.fixtures.applib.modules.ModuleWithFixtures;
 
-import domainapp.modules.simple.dom.afiliados.SimpleObject;
+import domainapp.modules.simple.dom.afiliados.Afiliado;
 
 @Configuration
 @ComponentScan
@@ -17,7 +17,7 @@ public class SimpleModule implements ModuleWithFixtures {
         return new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                repositoryService.removeAll(SimpleObject.class);
+                repositoryService.removeAll(Afiliado.class);
             }
         };
     }

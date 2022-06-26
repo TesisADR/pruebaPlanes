@@ -11,13 +11,13 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 
-@Column(length = Plan.MAX_LEN, allowsNull = "false")
-@Property(maxLength = Plan.MAX_LEN)
-@Parameter(maxLength = Plan.MAX_LEN)
-@ParameterLayout(named = "Plan")
+@Column(length = Planes.MAX_LEN, allowsNull = "false")
+@Property(maxLength = Planes.MAX_LEN)
+@Parameter(maxLength = Planes.MAX_LEN)
+@ParameterLayout(named = "Planes")
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Plan {
+public @interface Planes {
 
     int MAX_LEN = 40;
 

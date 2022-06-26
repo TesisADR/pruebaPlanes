@@ -19,14 +19,22 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.persistence.jdo.applib.services.JdoSupportService;
 
 import domainapp.modules.simple.types.Name;
+import domainapp.modules.simple.types.Apellido;
+import domainapp.modules.simple.types.Dni;
+import domainapp.modules.simple.types.Edad;
+import domainapp.modules.simple.types.FechaNacimiento;
+import domainapp.modules.simple.types.LugarNacimiento;
+import domainapp.modules.simple.types.Telefono;
+import domainapp.modules.simple.types.FechaInicio;
+import domainapp.modules.simple.types.Planes;
 
 @DomainService(
         nature = NatureOfService.VIEW,
-        logicalTypeName = "simple.SimpleObjects"
+        logicalTypeName = "simple.Afiliado"
 )
 @javax.annotation.Priority(PriorityPrecedence.EARLY)
 @lombok.RequiredArgsConstructor(onConstructor_ = {@Inject} )
-public class SimpleObjects {
+public class Afiliados {
 
     final RepositoryService repositoryService;
     final JdoSupportService jdoSupportService;
@@ -34,28 +42,38 @@ public class SimpleObjects {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.DIALOG_SIDEBAR)
-    public SimpleObject create(
-            @Name final String name) {
-        return repositoryService.persist(SimpleObject.withName(name));
+    public Afiliado create(
+            @Name final String name,
+            @Apellido final String apellido,
+            @Dni final String dni,
+            @Edad final String edad,
+            @FechaNacimiento final String fechaNacimiento,
+            @LugarNacimiento final String lugarNacimiento,
+            @Telefono final String telefono,
+            @FechaInicio final String fechaInicio,
+            @Planes final String planes) {
+        return repositoryService.persist(Afiliado.withName
+                (name, apellido, dni, edad, fechaNacimiento,
+                        lugarNacimiento, telefono, fechaInicio, planes));
     }
 
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, promptStyle = PromptStyle.DIALOG_SIDEBAR)
-    public List<SimpleObject> findByName(
-            @Name final String name
-            ) {
+    public List<Afiliado> findByDni(
+            @Dni final String dni
+    ) {
         return repositoryService.allMatches(
-                    Query.named(SimpleObject.class, SimpleObject.NAMED_QUERY__FIND_BY_NAME_LIKE)
-                        .withParameter("name", name));
+                Query.named(Afiliado.class, Afiliado.NAMED_QUERY__FIND_BY_DNI_LIKE)
+                        .withParameter("dni", dni));
     }
 
 
     @Programmatic
-    public SimpleObject findByNameExact(final String name) {
+    public Afiliado findByDniExact(final String dni) {
         return repositoryService.firstMatch(
-                    Query.named(SimpleObject.class, SimpleObject.NAMED_QUERY__FIND_BY_NAME_EXACT)
-                        .withParameter("name", name))
+                        Query.named(Afiliado.class, Afiliado.NAMED_QUERY__FIND_BY_DNI_EXACT)
+                                .withParameter("dni", dni))
                 .orElse(null);
     }
 
@@ -63,8 +81,8 @@ public class SimpleObjects {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-    public List<SimpleObject> listAll() {
-        return repositoryService.allInstances(SimpleObject.class);
+    public List<Afiliado> listAll() {
+        return repositoryService.allInstances(Afiliado.class);
     }
 
 
@@ -72,10 +90,10 @@ public class SimpleObjects {
 
     @Programmatic
     public void ping() {
-        JDOQLTypedQuery<SimpleObject> q = jdoSupportService.newTypesafeQuery(SimpleObject.class);
-        final QSimpleObject candidate = QSimpleObject.candidate();
+        JDOQLTypedQuery<Afiliado> q = jdoSupportService.newTypesafeQuery(Afiliado.class);
+        final QAfiliado candidate = QAfiliado.candidate();
         q.range(0,2);
-        q.orderBy(candidate.name.asc());
+        q.orderBy(candidate.dni.asc());
         q.executeList();
     }
 

@@ -9,13 +9,13 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.HomePage;
 import org.apache.isis.applib.annotation.Nature;
 
-import domainapp.modules.simple.dom.afiliados.SimpleObject;
-import domainapp.modules.simple.dom.afiliados.SimpleObjects;
+import domainapp.modules.simple.dom.afiliados.Afiliado;
+import domainapp.modules.simple.dom.afiliados.Afiliados;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
         logicalTypeName = "simple.HomePageViewModel"
-        )
+)
 @HomePage
 @DomainObjectLayout()
 public class HomePageViewModel {
@@ -24,9 +24,9 @@ public class HomePageViewModel {
         return getObjects().size() + " objects";
     }
 
-    public List<SimpleObject> getObjects() {
-        return simpleObjects.listAll();
+    public List<Afiliado> getObjects() {
+        return afiliados.listAll();
     }
 
-    @Inject SimpleObjects simpleObjects;
+    @Inject Afiliados afiliados;
 }
