@@ -34,23 +34,30 @@ import lombok.val;
 
 import domainapp.modules.simple.types.Name;
 import domainapp.modules.simple.types.Notes;
-
+import domainapp.modules.simple.types.Apellido;
+import domainapp.modules.simple.types.Dni;
+import domainapp.modules.simple.types.FechaNacimiento;
+import domainapp.modules.simple.types.Edad;
+import domainapp.modules.simple.types.LugarNacimiento;
+import domainapp.modules.simple.types.Telefono;
+import domainapp.modules.simple.types.FechaInicio;
+import domainapp.modules.simple.types.Plan;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "simple",
+        schema = "afiliadoapp",
         identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Unique(
-        name = "SimpleObject_name_UNQ", members = {"name"}
+        name = "Afiliado_dni_UNQ", members = {"dni"}
 )
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = SimpleObject.NAMED_QUERY__FIND_BY_NAME_LIKE,
+                name = Afiliado.NAMED_QUERY__FIND_BY_DNI_LIKE,
                 value = "SELECT " +
-                        "FROM domainapp.modules.simple.dom.so.SimpleObject " +
-                        "WHERE name.indexOf(:name) >= 0"
+                        "FROM domainapp.modules.simple.dom.afiliados.Afiliado " +
+                        "WHERE name.indexOf(:dni) >= 0"
         ),
         @javax.jdo.annotations.Query(
-                name = SimpleObject.NAMED_QUERY__FIND_BY_NAME_EXACT,
+                name = Afiliado.NAMED_QUERY__FIND_BY_DNI_EXACT,
                 value = "SELECT " +
                         "FROM domainapp.modules.simple.dom.so.SimpleObject " +
                         "WHERE name == :name"
@@ -58,20 +65,34 @@ import domainapp.modules.simple.types.Notes;
 })
 @javax.jdo.annotations.DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY, column="id")
 @javax.jdo.annotations.Version(strategy= VersionStrategy.DATE_TIME, column="version")
-@DomainObject(logicalTypeName = "simple.SimpleObject", entityChangePublishing = Publishing.ENABLED)
+@DomainObject(logicalTypeName = "afiliadoapp.Afiliado", entityChangePublishing = Publishing.ENABLED)
 @DomainObjectLayout()
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 @ToString(onlyExplicitlyIncluded = true)
-public class SimpleObject implements Comparable<SimpleObject> {
+public class Afiliado implements Comparable<Afiliado> {
 
-    static final String NAMED_QUERY__FIND_BY_NAME_LIKE = "SimpleObject.findByNameLike";
-    static final String NAMED_QUERY__FIND_BY_NAME_EXACT = "SimpleObject.findByNameExact";
+    static final String NAMED_QUERY__FIND_BY_DNI_LIKE = "Afiliado.findByNameLike";
+    static final String NAMED_QUERY__FIND_BY_DNI_EXACT = "Afiliado.findByNameExact";
 
-    public static SimpleObject withName(String name) {
-        val simpleObject = new SimpleObject();
-        simpleObject.setName(name);
-        return simpleObject;
+    @Inject RepositoryService repositoryService;
+    @Inject TitleService titleService;
+    @Inject MessageService messageService;
+
+    public static Afiliado withName(String name, String apellido, String dni, String edad,
+                                    String fechaNacimiento, String lugarNacimiento, String telefono,
+                                    String fechaInicio, String plan) {
+        val afiliado = new Afiliado();
+        afiliado.setName(name);
+        afiliado.setApellido(apellido);
+        afiliado.setDni(dni);
+        afiliado.setEdad(edad);
+        afiliado.setFechaNacimiento(fechaNacimiento);
+        afiliado.setLugarNacimiento(lugarNacimiento);
+        afiliado.setTelefono(telefono);
+        afiliado.setFechaInicio(fechaInicio);
+        afiliado.setPlan(plan);
+        return afiliado;
     }
 
     @Inject RepositoryService repositoryService;
